@@ -1,0 +1,28 @@
+{
+  "name": "screentime",
+  "displayName": "ScreenTime",
+  "description": "ScreenTime Counter",
+  "homepage": "https://s2009.fr",
+  "author": {
+    "name": "S2009",
+    "email": "contact@s2009.fr",
+    "url": "https://s2009.fr"
+  },
+  "icon": "build/icon.ico",
+  "version": "1.0.0",
+  "main": "build/app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win && rmdir /s /q dist\\win-unpacked dist\\.cache"
+  },
+  "keywords": [],
+  "license": "All rights reserved",
+  "bundleDependencies": [
+    "fs",
+    "path"
+  ],
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12"
+  }
+}

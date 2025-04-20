@@ -1,0 +1,6 @@
+# Dev folders
+.vscode
+
+# Dependencies and build output
+node_modules
+dist

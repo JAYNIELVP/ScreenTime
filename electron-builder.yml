@@ -1,0 +1,12 @@
+appId: fr.S2009.screentime
+productName: ScreenTime
+artifactName: ${productName}_${version}.${ext}
+copyright: Copyright © 2025 S2009
+directories:
+  output: dist
+files:
+  - build/**/*
+win:
+  target:
+    - portable
+  compression: maximum
