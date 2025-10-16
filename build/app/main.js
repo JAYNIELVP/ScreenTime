@@ -2,7 +2,6 @@ const {  app, BrowserWindow, ipcMain, screen, dialog, powerMonitor, shell } = re
 const path = require('path');
 const fs = require('fs');
 
-/** @type {BrowserWindow} */ let settings;
 /** @type {BrowserWindow} */ let widget;
 /** @type {Config} */ let config;
 /** @type {Data} */ let data;
@@ -26,7 +25,8 @@ class Config {
         widget: { x: 0, y: 0 },
         consumption: 30,
         cost: 0.25,
-        data: path.join(app.getPath('appData'), 'ScreenTime', 'data.json')
+        data: path.join(app.getPath('appData'), 'ScreenTime', 'data.json'),
+        widgetShape: 'Wide' // 'Square' | 'Wide' | 'Tall' | 'Free'
       };
 
       fs.writeFileSync(this.#configPath, JSON.stringify(defaultConfig, null, 2));
@@ -94,46 +94,24 @@ class Data {
 
 
 function openSettings() {
-  settings = new BrowserWindow({
-    width: 832,
-    height: 640,
-    center: true,
-    movable: true,
-    resizable: false,
-    maximizable: false,
-    fullscreenable: false,
-    autoHideMenuBar: true,
-    titleBarStyle: 'hidden',
-    icon: path.join(__dirname, "../icon.ico"),
-    titleBarOverlay: {
-      color: '#2C2F33',
-      symbolColor: '#5865F2',
-      height: 32,
-    },
-    webPreferences: { 
-      preload: path.join(__dirname, 'preload.js') 
-    }
-  });
-
-  // settings.webContents.openDevTools({ mode: 'detach' });
-  settings.loadFile(path.join(__dirname, '../www/settings.html'));
-
-  settings.webContents.on('before-input-event', (event, input) => {
-    if (input.control && input.shift && input.key === 'I' || input.control && input.shift && input.key === 'C' || input.alt || input.key === 'F12') {
-      event.preventDefault();
-    }
-  });
+  if (!widget || widget.isDestroyed()) return;
+  widget.setResizable(true);
+  widget.setMinimumSize(832, 640);
+  widget.setSize(832, 640);
+  widget.center();
+  widget.setFocusable(true);
+  widget.loadFile(path.join(__dirname, '../www/settings.html'));
 }
 
 function createWidget() {
   widget = new BrowserWindow({
-    width: 256,
-    height: 128,
+    width: 480,
+    height: 240,
     frame: false,
     movable: true,
     closable: false,
-    focusable: false,
-    resizable: false,
+    focusable: true,
+    resizable: true,
     transparent: true,
     skipTaskbar: true,
     minimizable: false,
@@ -148,7 +126,17 @@ function createWidget() {
 
   // widget.webContents.openDevTools({ mode: 'detach' });
   widget.loadFile(path.join(__dirname, '../www/widget.html'));
-  widget.setPosition(config.get().widget.x, config.get().widget.y);
+
+  // Position the widget: center on first run (default 0,0), else restore last position
+  const savedPosition = config.get().widget;
+  if ((savedPosition.x === 0 && savedPosition.y === 0)) {
+    const { workArea } = screen.getPrimaryDisplay();
+    const centeredX = Math.round(workArea.x + (workArea.width - widget.getBounds().width) / 2);
+    const centeredY = Math.round(workArea.y + (workArea.height - widget.getBounds().height) / 2);
+    widget.setPosition(centeredX, centeredY);
+  } else {
+    widget.setPosition(savedPosition.x, savedPosition.y);
+  }
   widget.webContents.send('message-from-main', {command: 'init', config: config.get(), data: data.get(new Date().toLocaleDateString())});
 
   widget.webContents.on('before-input-event', (event, input) => {
@@ -189,6 +177,8 @@ function init() {
 
 app.whenReady().then(() => {
   init();
+  // Open settings inside the same window automatically on startup for easier configuration
+  openSettings();
 
   powerMonitor.on('lock-screen', (event) => {
     widget.webContents.send('message-from-main', 'suspend');
@@ -226,25 +216,45 @@ ipcMain.on('message-from-renderer', async (event, arg) => {
   } else if (arg.command == 'save-config') {
     config.set('consumption', arg.consumption);
     config.set('cost', arg.cost);
+    if (arg.widgetShape) config.set('widgetShape', arg.widgetShape);
 
-    settings.webContents.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
-    settings.webContents.send('message-from-main', 'draw-charts');
-    settings.webContents.send('message-from-main', 'config-saved');
+    // respond to the current webContents (settings page loaded in the widget window)
+    event.sender.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
+    event.sender.send('message-from-main', 'draw-charts');
+    event.sender.send('message-from-main', 'config-saved');
   } else if (arg == 'open-settings') {
-    if (!settings || settings.isDestroyed()) {
-      openSettings();
+    openSettings();
+  } else if (arg == 'open-widget') {
+    if (!widget || widget.isDestroyed()) return;
+    widget.setResizable(true);
+    const shape = config.get().widgetShape || 'Wide';
+    if (shape === 'Square') {
+      widget.setAspectRatio(1);
+      widget.setMinimumSize(320, 320);
+      widget.setSize(480, 480);
+    } else if (shape === 'Wide') {
+      widget.setAspectRatio(2);
+      widget.setMinimumSize(320, 160);
+      widget.setSize(480, 240);
+    } else if (shape === 'Tall') {
+      widget.setAspectRatio(0.5);
+      widget.setMinimumSize(240, 480);
+      widget.setSize(300, 600);
     } else {
-      if (settings.isMinimized()) {
-        settings.restore();
-      }
-    
-      settings.focus();
+      widget.setAspectRatio(0);
+      widget.setMinimumSize(200, 140);
+      widget.setSize(480, 240);
     }
+    widget.center();
+    widget.loadFile(path.join(__dirname, '../www/widget.html'));
+    // re-send init for widget page
+    widget.webContents.send('message-from-main', {command: 'init', config: config.get(), data: data.get(new Date().toLocaleDateString())});
   } else if (arg == 'ready') {
-    settings.webContents.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
-    settings.webContents.send('message-from-main', 'draw-charts');
+    // settings page is ready in the current window
+    event.sender.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
+    event.sender.send('message-from-main', 'draw-charts');
   } else if (arg == 'change-path') {
-    const result = await dialog.showOpenDialog(settings, { 
+    const result = await dialog.showOpenDialog(widget, { 
       properties: ['openDirectory'],
       defaultPath: path.dirname(config.get().data),
       title: 'Select Directory to Save Data',
@@ -263,12 +273,12 @@ ipcMain.on('message-from-renderer', async (event, arg) => {
       }
 
       config.set('data', dataPath);
-      settings.webContents.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
-      settings.webContents.send('message-from-main', 'draw-charts');
-      settings.webContents.send('message-from-main', 'path-changed');
+      event.sender.send('message-from-main', {command: 'init', config: config.get(), data: data.get()});
+      event.sender.send('message-from-main', 'draw-charts');
+      event.sender.send('message-from-main', 'path-changed');
     }
   } else if (arg == 'export-config') {
-    const result = await dialog.showSaveDialog(settings, { 
+    const result = await dialog.showSaveDialog(widget, { 
       defaultPath: path.join(app.getPath('downloads'), 'config.json'),
       title: 'Export Configuration',
       filters: [{ name: 'JSON Files', extensions: ['json'] }]
@@ -276,7 +286,7 @@ ipcMain.on('message-from-renderer', async (event, arg) => {
 
     if (!result.canceled && result.filePath) {
       fs.copyFileSync(path.join(app.getPath('appData'), 'ScreenTime', 'config.json'), result.filePath, fs.constants.COPYFILE_FICLONE);
-      settings.webContents.send('message-from-main', 'config-exported');
+      event.sender.send('message-from-main', 'config-exported');
       shell.showItemInFolder(result.filePath);
     }
   } else if (arg == 'delete-config') {

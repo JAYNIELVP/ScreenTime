@@ -17,7 +17,7 @@ main .nav1 {
 }
 
 main .nav1 h1 {
-    font-size: 16px;
+    font-size: 18px;
     color: #5865F2;
 }
 
@@ -64,12 +64,12 @@ main .nav2 {
 }
 
 main .nav2 small {
-    font-size: 12px;
+    font-size: 14px;
     color: #AAAAAA;
 }
 
 main .nav2 h1 {
-    font-size: 32px;
+    font-size: 40px;
 }
 
 main .nav3 {
@@ -88,10 +88,10 @@ main .nav3 .realtime, main .nav3 .consumption {
 }
 
 main .nav3 small {
-    font-size: 8px;
+    font-size: 10px;
     color: #AAAAAA;
 }
 
 main .nav3 h1 {
-    font-size: 20px;
+    font-size: 24px;
 }
