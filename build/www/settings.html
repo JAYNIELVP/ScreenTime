@@ -21,6 +21,9 @@
     </div>
     <header>
       <div class="container">
+        <button onclick="backToWidget()" title="Back" style="margin-right: 12px;">
+          ← Back
+        </button>
         <img src="../icon.ico" alt="ScreenTime">
         <h1>ScreenTime</h1>
       </div>
@@ -61,6 +64,18 @@
               </svg>                
               <h1>DELETE</h1>
             </button>
+          </div>
+          <div class="shape">
+            <h2>WIDGET SHAPE</h2>
+            <div class="container">
+              <select id="widget-shape">
+                <option value="Square">Square</option>
+                <option value="Wide">Wide</option>
+                <option value="Tall">Tall</option>
+                <option value="Free">Free</option>
+              </select>
+              <small style="color:#aaa;">Sets aspect and preset size for the timer widget.</small>
+            </div>
           </div>
           <div class="energy">
             <div class="consumption">

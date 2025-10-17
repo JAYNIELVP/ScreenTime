@@ -205,6 +205,7 @@ function init() {
     document.getElementById('consumption').value = config.consumption.toString();
     document.getElementById('cost').value = config.cost.toString();
     document.getElementById('data-path').value = config.data;
+    document.getElementById('widget-shape').value = config.widgetShape || 'Wide';
 }
 
 function changePath() {
@@ -235,6 +236,7 @@ function deleteConfig() {
 function saveConfig() {
     const consumption = document.getElementById('consumption').value;
     const cost = document.getElementById('cost').value;
+    const widgetShape = document.getElementById('widget-shape').value;
 
     if(consumption == 0) {
         openPopup({ 
@@ -249,7 +251,7 @@ function saveConfig() {
             btns: [{text: 'OK', func: 'closePopup()'}]  
         });
     } else {
-        window.electronAPI.sendMessage({command: 'save-config', consumption: parseFloat(consumption), cost: parseFloat(cost)});
+        window.electronAPI.sendMessage({command: 'save-config', consumption: parseFloat(consumption), cost: parseFloat(cost), widgetShape});
     }
 }
 
@@ -293,3 +295,7 @@ window.electronAPI.onMessage((event, message) => {
         });
     }
 });
+
+function backToWidget() {
+    window.electronAPI.sendMessage('open-widget');
+}
